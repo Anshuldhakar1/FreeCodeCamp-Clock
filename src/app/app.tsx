@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
+import style from '../styles.scss';
 
 import Main from './Main';
 
 export function App() {
   return (
-    <div id="Container">
+    <div id="Container" className="gridCenter">
       <Main />
     </div>
   );

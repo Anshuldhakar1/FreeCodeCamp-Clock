@@ -1,10 +1,19 @@
-body {
+body, body * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-.grid-center {
+#Container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.gridCenter {
     display: grid;
     place-items: center;
+}
+
+button:hover {
+    cursor: pointer;
 }

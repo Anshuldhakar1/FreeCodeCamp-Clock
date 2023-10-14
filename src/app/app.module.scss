@@ -1,1 +1,7 @@
-/* Your styles goes here. */
+.flex {
+    display: flex;
+}
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}

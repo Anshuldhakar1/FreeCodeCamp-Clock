@@ -3,100 +3,53 @@ import styles from './app.module.scss';
 
 import AppCounter from './AppCounter';
 
-export const Core = () => { 
+export const Core = () => {
 
-  const [initMins, setInitmins] = useState(0);
-  // const [initMins, setInitmins] = useState(25);
-  const [time, setTime] = useState({ mins: initMins, secs: 5 });
-  console.log(time);
-  const [breakLen, setBreakLen] = useState(1);
-  const [sessionLen, setSessionLen] = useState(0);
-  // const [sessionLen, setSessionLen] = useState(25);
+  const [breakLen, setBreakLen] = useState(5);
+  const [sessionLen, setSessionLen] = useState(25);
+  const [time, setTime] = useState({ mins: sessionLen, secs: 0 });
   const [running, setRunning] = useState(false);
-  
   const [sessionTitle, setSessionTitle] = useState("Session");
 
-  let interval:NodeJS.Timer | undefined = undefined;
-
-  useEffect(() => { 
-    if (running) startTimer();
-    else if (interval) clearInterval(interval);
-
-    return () => { 
-      clearInterval(interval);
-    };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [running]);
-
-  useEffect(() => { 
-    updateSessionLen();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionLen]);
-  
-
-  function updateSessionLen() {
-    if (sessionTitle === "Session") {
-      setInitmins(sessionLen);
-      setTime({ mins: sessionLen, secs: 5 });
+  useEffect(() => {
+    if (running) {
+      const timer = setInterval(() => {
+        if (time.mins === 0 && time.secs === 0) {
+          setSessionTitle(sessionTitle === "Session" ? "Break" : "Session");
+          setTime({ mins: sessionTitle === "Session" ? breakLen : sessionLen, secs: 0 });
+        } else if (time.secs === 0) {
+          setTime({ mins: time.mins - 1, secs: 59 });
+        } else {
+          setTime({ mins: time.mins, secs: time.secs - 1 });
+        }
+      }, 1000);
+      return () => clearInterval(timer);
     }
-  }
+  }, [running, time, sessionTitle, breakLen, sessionLen]);
 
-  function startTimer() {
-    interval = setInterval(() => {
-      setTime((prevTime) => {
-        
-        let s = prevTime.secs;
-        let m = prevTime.mins;
+  useEffect(() => {
+    if(!running) setTime({mins:sessionLen,secs:0});
+  }, [sessionLen]);
 
-        s--;
-        if (s < 0) {
-          s = 59; m--;
-        }
-
-        if (m < 0) {
-          setRunning(false);
-          if (sessionTitle === "Session") { 
-            setSessionTitle("Break");
-            setTime({ mins: breakLen, secs: 0 });
-          }
-          if (sessionTitle === "Break") {
-            setSessionTitle("Session");
-            setTime({ mins: sessionLen, secs: 0 });
-          }
-          setTimeout(() => { 
-            setRunning(true);
-          },5);
-        }
-
-        return { mins: m, secs: s };
-      });
-    // }, 1000);
-    }, 1000);
-  }  
-  
-  function twoDigits(num:number): string {
+  function twoDigits(num: number): string {
     return (num < 10 && num >= 0 ? "0" : "") + num;
   }
 
   function handleReset() {
-    setSessionTitle("Session");
+    setBreakLen(5);
+    setSessionLen(25);
+    setTime({ mins: sessionLen, secs: 0 });
     setRunning(false);
-    // setInitmins(25);
-    // setTime({ mins: 25, secs: 0 });
-    // setSessionLen(25);
-    // setBreakLen(5);
-    setInitmins(0);
-    setTime({ mins: 0, secs: 5 });
-    setSessionLen(0);
-    setBreakLen(1);
+    setSessionTitle("Session");
+  }
+
+  function startStopTimer() {
+    setRunning(!running);
   }
 
   return (
-
     <div className={styles.flexCol}>
-
-      <div style={{display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <AppCounter title="Break Length" type="break" value={breakLen} isRunning={running} setter={setBreakLen} />
         <AppCounter title="Session Length" type="session" value={sessionLen} isRunning={running} setter={setSessionLen} />
       </div>
@@ -104,10 +57,9 @@ export const Core = () => {
       <div>
         <label id="timer-label">{sessionTitle}</label>
         <div id="time-left">{twoDigits(time.mins)}:{twoDigits(time.secs)}</div>
-        <button id="start_stop" onClick={() => { setRunning(!running); } }>Play/Pause</button>
+        <button id="start_stop" onClick={() => { startStopTimer(); }}>Play/Pause</button>
         <button id="reset" onClick={() => { handleReset(); }}>Reset</button>
-      </div> 
-
+      </div>
     </div>
   );
 };

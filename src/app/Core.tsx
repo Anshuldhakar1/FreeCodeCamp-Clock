@@ -3,12 +3,15 @@ import styles from './app.module.scss';
 
 import AppCounter from './AppCounter';
 
-export const Main = () => { 
+export const Core = () => { 
 
-  const [initMins, setInitmins] = useState(25);
-  const [time, setTime] = useState({mins:initMins,secs:0});
-  const [breakLen, setBreakLen] = useState(5);
-  const [sessionLen, setSessionLen] = useState(25);
+  const [initMins, setInitmins] = useState(0);
+  // const [initMins, setInitmins] = useState(25);
+  const [time, setTime] = useState({ mins: initMins, secs: 5 });
+  console.log(time);
+  const [breakLen, setBreakLen] = useState(1);
+  const [sessionLen, setSessionLen] = useState(0);
+  // const [sessionLen, setSessionLen] = useState(25);
   const [running, setRunning] = useState(false);
   
   const [sessionTitle, setSessionTitle] = useState("Session");
@@ -35,7 +38,7 @@ export const Main = () => {
   function updateSessionLen() {
     if (sessionTitle === "Session") {
       setInitmins(sessionLen);
-      setTime({ mins: sessionLen, secs: 0 });
+      setTime({ mins: sessionLen, secs: 5 });
     }
   }
 
@@ -63,11 +66,12 @@ export const Main = () => {
           }
           setTimeout(() => { 
             setRunning(true);
-          },10);
+          },5);
         }
 
         return { mins: m, secs: s };
       });
+    // }, 1000);
     }, 1000);
   }  
   
@@ -78,10 +82,14 @@ export const Main = () => {
   function handleReset() {
     setSessionTitle("Session");
     setRunning(false);
-    setInitmins(25);
-    setTime({ mins: 25, secs: 0 });
-    setSessionLen(25);
-    setBreakLen(5);
+    // setInitmins(25);
+    // setTime({ mins: 25, secs: 0 });
+    // setSessionLen(25);
+    // setBreakLen(5);
+    setInitmins(0);
+    setTime({ mins: 0, secs: 5 });
+    setSessionLen(0);
+    setBreakLen(1);
   }
 
   return (
@@ -104,4 +112,4 @@ export const Main = () => {
   );
 };
 
-export default Main;
+export default Core;

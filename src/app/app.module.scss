@@ -5,3 +5,53 @@
     display: flex;
     flex-direction: column;
 }
+
+#timeLeft {
+    font-size: 1.25rem;
+}
+
+.gridCenter {
+    display: grid;
+    place-items: center;
+}
+
+#AnimatedsvgContainer {
+    // z-index: 1;
+    position: relative;
+
+    width: 200px; 
+    height: 200px;
+}
+
+.animatedSvg {
+    --svgMeterBG: #4e4e4e;
+    --svgMeterColor: #2c8a2c;
+    --svgCompleteTime: 10s;
+
+    position: absolute;
+    rotate: -90deg;
+}
+
+.animatedSvgCircle {
+    fill: none;
+    stroke-width: 5px;
+    stroke-linecap: round;
+}
+
+.animatedSvgCircleBG {
+    stroke: var(--svgMeterBG);
+}
+
+.animatedSvgCircleMeter {
+    stroke: var(--svgMeterColor);
+    stroke-dashoffset: 300px;
+    stroke-dasharray: 300px;
+
+    animation: progression var(--svgCompleteTime) linear forwards;
+    animation-play-state: paused;
+}
+
+@keyframes progression {
+    0% { stroke-dashoffset: 300px; }
+    100% { stroke-dashoffset: 0; }
+}

@@ -14,6 +14,10 @@ export const Core = () => {
   const [running, setRunning] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("Session");
 
+  // Animation variable states 
+  const [animationState, setAnimationState] = useState(false);
+  const [animationLen, setAnimationLen] = useState("60s");
+
   const alarmRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -67,11 +71,13 @@ export const Core = () => {
   }
 
   function handleReset() {
-    setBreakLen(5);
-    setSessionLen(25);
-    setTime({ mins: sessionLen, secs: 0 });
-    setRunning(false);
-    setSessionTitle("Session");
+    setBreakLen(() => { return 5 });
+    setSessionLen(() => { return 25 });
+    setTime(() => { return { mins: sessionLen, secs: 0 } });
+    setRunning(() => { return false });
+    setSessionTitle(() => { return "Session" });
+    setAnimationLen(() => { return "60s" });
+    setAnimationState(() => { return false })
     if (alarmRef.current) {
       alarmRef.current.pause();
       alarmRef.current.currentTime = 0;
@@ -80,6 +86,16 @@ export const Core = () => {
 
   function startStopTimer() {
     setRunning(!running);
+
+    setAnimationState(
+      (prev) => {
+        if (!prev) 
+          setAnimationLen(() => { return `${sessionLen * 60 + 14}s` });
+        
+        return !prev;
+      }
+    );
+    // setAnimationLen(() => { return `${sessionLen * 60}s` });
   }
 
   return (
@@ -91,10 +107,29 @@ export const Core = () => {
       </div>
 
       <div>
+
         <label id="timer-label">{sessionTitle}</label>
-        <div id="time-left">{twoDigits(time.mins)}:{twoDigits(time.secs)}</div>
+
+        <div id={styles.AnimatedsvgContainer} className={styles.gridCenter}>
+          <div id={styles.timeLeft}>
+            {twoDigits(time.mins)}:{twoDigits(time.secs)}
+          </div>
+          <svg className={styles.animatedSvg} style={{ "--svgCompleteTime": animationLen }} viewBox = "0 0 100 100">
+            <circle
+              className={styles.animatedSvgCircle + " " + styles.animatedSvgCircleBG}
+              cx="50" cy="50" r="40"
+            />
+            <circle
+              style={{animationPlayState: animationState?"running":"paused"}}
+              className={styles.animatedSvgCircle + " " + styles.animatedSvgCircleMeter}
+              cx="50" cy="50" r="40"
+            />
+          </svg>
+        </div>
+
         <button id="start_stop" onClick={() => { startStopTimer(); }}>Play/Pause</button>
         <button id="reset" onClick={() => { handleReset(); }}>Reset</button>
+      
       </div>
 
       <div id="alarm">

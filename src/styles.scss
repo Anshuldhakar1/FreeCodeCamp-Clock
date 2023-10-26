@@ -31,8 +31,6 @@ body, body * {
     height: 100vh;
 }
 
-
-
 @media (min-width: 768px)  {
     #Container::before {
         background: rgb(121,56,9);
@@ -65,3 +63,4 @@ body, body * {
 button:hover {
     cursor: pointer;
 }
+

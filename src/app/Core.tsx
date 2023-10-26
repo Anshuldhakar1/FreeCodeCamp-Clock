@@ -83,7 +83,7 @@ export const Core = () => {
   }
 
   return (
-    <div className={styles.flexCol}>
+    <div id="Core" className={styles.flexCol}>
 
       <div style={{ display: "flex" }}>
         <AppCounter title="Break Length" type="break" value={breakLen} isRunning={running} setter={setBreakLen} />

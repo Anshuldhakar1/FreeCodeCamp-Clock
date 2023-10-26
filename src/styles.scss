@@ -9,6 +9,54 @@ body, body * {
     height: 100vh;
 }
 
+#Container::before {
+    content: '';
+    position: absolute;
+    top:0;
+    left: 0;
+    
+    background: rgb(170,86,25);
+    background: linear-gradient(
+        0deg, rgba(170,86,25,1) 0%, 
+        rgba(171,83,20,1) 13%, 
+        rgba(196,110,48,1) 27%, 
+        rgba(180,113,22,1) 40%, 
+        rgba(170,111,39,1) 52%, 
+        rgba(170,105,34,1) 64%, 
+        rgba(162,79,20,1) 85%, 
+        rgba(121,56,9,1) 100%
+    );
+    z-index: -2;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+
+@media (min-width: 768px)  {
+    #Container::before {
+        background: rgb(121,56,9);
+        background: linear-gradient(
+            90deg, rgba(121,56,9,1) 0%, 
+            rgba(216,104,24,1) 14%, 
+            rgba(255,160,93,1) 27%, 
+            rgba(255,167,50,1) 40%, 
+            rgba(235,176,104,1) 52%, 
+            rgba(204,144,78,1) 64%, 
+            rgba(216,104,24,1) 85%, 
+            rgba(121,56,9,1) 100%
+        );
+    }
+}
+
+#Container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .gridCenter {
     display: grid;
     place-items: center;

@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useRef, useState } from 'react';
 import styles from './app.module.scss';
+
+import alarm from '../assets/alarm.wav';
 
 import AppCounter from './AppCounter';
 
@@ -11,10 +14,36 @@ export const Core = () => {
   const [running, setRunning] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("Session");
 
+  const alarmRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = alarmRef.current;
+    if (audio) {
+      audio.addEventListener("ended", () => {
+        audio.currentTime = 0;
+      });
+    }
+    return () => {
+      if (audio) {
+        audio.removeEventListener("ended", () => {
+          audio.currentTime = 0;
+        });
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (running) {
       const timer = setInterval(() => {
         if (time.mins === 0 && time.secs === 0) {
+          const audio = alarmRef.current;
+          if (audio) {
+            audio.play();
+            setTimeout(() => {
+              audio.pause();
+              audio.currentTime = 0;
+            }, 2000);
+          }
           setSessionTitle(sessionTitle === "Session" ? "Break" : "Session");
           setTime({ mins: sessionTitle === "Session" ? breakLen : sessionLen, secs: 0 });
         } else if (time.secs === 0) {
@@ -23,12 +52,14 @@ export const Core = () => {
           setTime({ mins: time.mins, secs: time.secs - 1 });
         }
       }, 1000);
-      return () => clearInterval(timer);
+      return () => {
+        clearInterval(timer);
+      };
     }
-  }, [running, time, sessionTitle, breakLen, sessionLen]);
+  }, [running, time, sessionTitle, breakLen]);
 
   useEffect(() => {
-    if(!running) setTime({mins:sessionLen,secs:0});
+    if (!running) setTime({ mins: sessionLen, secs: 0 });
   }, [sessionLen]);
 
   function twoDigits(num: number): string {
@@ -41,6 +72,10 @@ export const Core = () => {
     setTime({ mins: sessionLen, secs: 0 });
     setRunning(false);
     setSessionTitle("Session");
+    if (alarmRef.current) {
+      alarmRef.current.pause();
+      alarmRef.current.currentTime = 0;
+    }
   }
 
   function startStopTimer() {
@@ -49,6 +84,7 @@ export const Core = () => {
 
   return (
     <div className={styles.flexCol}>
+
       <div style={{ display: "flex" }}>
         <AppCounter title="Break Length" type="break" value={breakLen} isRunning={running} setter={setBreakLen} />
         <AppCounter title="Session Length" type="session" value={sessionLen} isRunning={running} setter={setSessionLen} />
@@ -60,6 +96,11 @@ export const Core = () => {
         <button id="start_stop" onClick={() => { startStopTimer(); }}>Play/Pause</button>
         <button id="reset" onClick={() => { handleReset(); }}>Reset</button>
       </div>
+
+      <div id="alarm">
+        <audio ref={alarmRef} src={alarm} id="beep"></audio>
+      </div>
+
     </div>
   );
 };

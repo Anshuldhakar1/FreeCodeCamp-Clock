@@ -9,14 +9,10 @@ import AppCounter from './AppCounter';
 export const Core = () => {
 
   const [breakLen, setBreakLen] = useState(5);
-  const [sessionLen, setSessionLen] = useState(25);
+  const [sessionLen, setSessionLen] = useState(1);
   const [time, setTime] = useState({ mins: sessionLen, secs: 0 });
   const [running, setRunning] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("Session");
-
-  // Animation variable states 
-  const [animationState, setAnimationState] = useState(false);
-  const [animationLen, setAnimationLen] = useState("60s");
 
   const alarmRef = useRef<HTMLAudioElement>(null);
 
@@ -40,7 +36,9 @@ export const Core = () => {
     if (running) {
       const timer = setInterval(() => {
         if (time.mins === 0 && time.secs === 0) {
+          
           const audio = alarmRef.current;
+
           if (audio) {
             audio.play();
             setTimeout(() => {
@@ -48,9 +46,15 @@ export const Core = () => {
               audio.currentTime = 0;
             }, 2000);
           }
-          setSessionTitle(sessionTitle === "Session" ? "Break" : "Session");
-          setTime({ mins: sessionTitle === "Session" ? breakLen : sessionLen, secs: 0 });
-          setAnimationLen("251.3274px");  // 2 * Math.PI * 40
+
+          setSessionTitle((prevTitle) => { 
+            return prevTitle === "Session" ? "Break" : "Session";
+          });
+
+          setTime(() => { 
+            return { mins: sessionTitle === "Session" ? breakLen : sessionLen, secs: 0 }
+          });
+
         } else if (time.secs === 0) {
           setTime({ mins: time.mins - 1, secs: 59 });
         } else {
@@ -73,13 +77,10 @@ export const Core = () => {
 
   function handleReset() {
     setBreakLen(() => { return 5 });
-    setSessionLen(() => { return 25 });
+    setSessionLen(() => { return 1 });
     setTime(() => { return { mins: sessionLen, secs: 0 } });
     setRunning(() => { return false });
     setSessionTitle(() => { return "Session" });
-    // setAnimationLen(() => { return "251.3274px" });
-    setAnimationLen(() => { return "310 px" });
-    setAnimationState(() => { return false })
     if (alarmRef.current) {
       alarmRef.current.pause();
       alarmRef.current.currentTime = 0;
@@ -88,16 +89,6 @@ export const Core = () => {
 
   function startStopTimer() {
     setRunning(!running);
-
-    setAnimationState(
-      (prev) => {
-        if (!prev) 
-          setAnimationLen(() => { return `${sessionLen * 60 + 14}s` });
-        
-        return !prev;
-      }
-    );
-    // setAnimationLen(() => { return `${sessionLen * 60}s` });
   }
 
   return (
@@ -116,13 +107,13 @@ export const Core = () => {
           <div id={styles.timeLeft}>
             {twoDigits(time.mins)}:{twoDigits(time.secs)}
           </div>
-          <svg className={styles.animatedSvg} style={{ "--svgCompleteTime": animationLen }} viewBox = "0 0 100 100">
+          <svg className={styles.animatedSvg} viewBox = "0 0 100 100">
             <circle
               className={styles.animatedSvgCircle + " " + styles.animatedSvgCircleBG}
               cx="50" cy="50" r="40"
             />
             <circle
-              style={{ animationPlayState: animationState ? "running" : "paused", strokeDashoffset: animationLen }}
+              
               className={styles.animatedSvgCircle + " " + styles.animatedSvgCircleMeter}
               cx="50" cy="50" r="40"
             />

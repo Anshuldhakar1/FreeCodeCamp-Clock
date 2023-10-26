@@ -23,6 +23,24 @@
     height: 200px;
 }
 
+#AnimatedsvgContainer::before {
+    content: '';
+    position: absolute;
+    inset:0;
+    width: 1px;
+    height: 100%;
+    left: 50%;
+}
+
+#AnimatedsvgContainer::after {
+    content: '';
+    position: absolute;
+    inset:0;
+    height: 1px;
+    width: 100%;
+    top: 50%;
+}
+
 .animatedSvg {
     --svgMeterBG: #4e4e4e;
     --svgMeterColor: #2c8a2c;
@@ -35,7 +53,7 @@
 .animatedSvgCircle {
     fill: none;
     stroke-width: 5px;
-    stroke-linecap: round;
+    stroke-linecap: butt;
 }
 
 .animatedSvgCircleBG {

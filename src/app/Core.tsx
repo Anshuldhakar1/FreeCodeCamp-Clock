@@ -50,6 +50,7 @@ export const Core = () => {
           }
           setSessionTitle(sessionTitle === "Session" ? "Break" : "Session");
           setTime({ mins: sessionTitle === "Session" ? breakLen : sessionLen, secs: 0 });
+          setAnimationLen("251.3274px");  // 2 * Math.PI * 40
         } else if (time.secs === 0) {
           setTime({ mins: time.mins - 1, secs: 59 });
         } else {
@@ -76,7 +77,8 @@ export const Core = () => {
     setTime(() => { return { mins: sessionLen, secs: 0 } });
     setRunning(() => { return false });
     setSessionTitle(() => { return "Session" });
-    setAnimationLen(() => { return "60s" });
+    // setAnimationLen(() => { return "251.3274px" });
+    setAnimationLen(() => { return "310 px" });
     setAnimationState(() => { return false })
     if (alarmRef.current) {
       alarmRef.current.pause();
@@ -120,7 +122,7 @@ export const Core = () => {
               cx="50" cy="50" r="40"
             />
             <circle
-              style={{animationPlayState: animationState?"running":"paused"}}
+              style={{ animationPlayState: animationState ? "running" : "paused", strokeDashoffset: animationLen }}
               className={styles.animatedSvgCircle + " " + styles.animatedSvgCircleMeter}
               cx="50" cy="50" r="40"
             />

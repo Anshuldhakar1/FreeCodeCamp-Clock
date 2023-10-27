@@ -9,7 +9,7 @@ import AppCounter from './AppCounter';
 export const Core = () => {
 
   const [breakLen, setBreakLen] = useState(5);
-  const [sessionLen, setSessionLen] = useState(1);
+  const [sessionLen, setSessionLen] = useState(25);
   const [time, setTime] = useState({ mins: sessionLen, secs: 0 });
   const [running, setRunning] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("Session");
@@ -77,7 +77,7 @@ export const Core = () => {
 
   function handleReset() {
     setBreakLen(() => { return 5 });
-    setSessionLen(() => { return 1 });
+    setSessionLen(() => { return 25 });
     setTime(() => { return { mins: sessionLen, secs: 0 } });
     setRunning(() => { return false });
     setSessionTitle(() => { return "Session" });

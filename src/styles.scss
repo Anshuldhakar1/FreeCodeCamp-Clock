@@ -31,22 +31,6 @@ body, body * {
     height: 100vh;
 }
 
-@media (min-width: 768px)  {
-    #Container::before {
-        background: rgb(121,56,9);
-        background: linear-gradient(
-            90deg, rgba(121,56,9,1) 0%, 
-            rgba(216,104,24,1) 14%, 
-            rgba(255,160,93,1) 27%, 
-            rgba(255,167,50,1) 40%, 
-            rgba(235,176,104,1) 52%, 
-            rgba(204,144,78,1) 64%, 
-            rgba(216,104,24,1) 85%, 
-            rgba(121,56,9,1) 100%
-        );
-    }
-}
-
 #Container::after {
     content: '';
     position: absolute;

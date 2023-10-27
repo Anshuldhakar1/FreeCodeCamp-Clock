@@ -60,10 +60,9 @@
 
 .animatedSvgCircleMeter {
     stroke: var(--svgMeterColor);
-    stroke-dashoffset: 49px;
+    stroke-dashoffset: 300px;
     stroke-dasharray: 300px;
 
-    // box-shadow: 0px 0px 0px 8px rgba(230,0,0,0.1);
     animation: glow 2s ease-in-out forwards;
     animation-iteration-count: infinite;
 }
